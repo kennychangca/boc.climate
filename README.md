@@ -2,8 +2,7 @@ Bank of Canada Java Quiz (Climate)
 ====================================
 
 - Spring Boot with Maven and Spring IO Platform for dependency management
-- Web application (WAR) packaging as well as self-contained JAR
-- Thymeleaf with Java 8 Time (Java8TimeDialect)
+- Thymeleaf with Java 8
 - Maven Wrapper included
 
 Prerequisites
@@ -16,7 +15,7 @@ Building the project
 
 Clone the repository:
 
-> git clone https://github.com/kolorobot/spring-boot-thymeleaf
+> git clone git@github.com:kennychangca/boc.climate.git
 
 Navigate to the newly created folder:
 
@@ -24,9 +23,33 @@ Navigate to the newly created folder:
 
 To package and run unit tests:
 
-> mvn clean install 
+> mvn clean install
 
-Run the project with:
+Run the project directly with:
 
 > mvn -q spring-boot:run
+
+Design Decisions
+--------------------
+	{UI}
+	
+		- Empty data are displayed with null to allow more clear clickable and consistency
+
+	{Data}
+	
+		- String fields such as Station Name/Province is a mendatory field that shouldn't be empty
+		- Date field needs to be a non empty and valid date entry
+		- Data source is only supporting .csv as input on application hosted server
+		
+	{Service}
+	
+		- Invalid date or empty station name will be skipped and not loaded into dataset and hence will not be shown on summary page (UI)
+		- In "application.properties" file, a error theshold (percentage of invalid dataset) is introduced to determine wheather service should fail out on exception
+		
+UI Limitations
+--------------------
+	- Build with more modern JS liberary, hence some UI features will not be compatible with older version of IEs
+	- Summary data are all listed in one page, not in papable fashion
+	- Data are kept on client side once loaded and content liveness  is not sync periodically with server data
+	
 
