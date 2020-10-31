@@ -29,6 +29,13 @@ Run the project directly with:
 
 > mvn -q spring-boot:run
 
+
+Project UIs
+--------------------
+/summary   => Display full list of climate data
+/detail/{id}    => Display a specified climate data by id
+
+
 Design Decisions
 --------------------
 	{UI}
