@@ -32,8 +32,8 @@ Run the project directly with:
 
 Project UIs
 --------------------
-/summary   => Display full list of climate data
-/detail/{id}    => Display a specified climate data by id
+{localhost}/               => Display full list of climate data
+{localhost}/detail/{id}    => Display a specified climate data by id
 
 
 Design Decisions

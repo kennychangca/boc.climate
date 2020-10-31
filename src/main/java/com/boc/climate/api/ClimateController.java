@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+
 import com.boc.climate.service.ClimateService;
 import lombok.var;
 
 
 @Controller
-@RequestMapping("/")
 public class ClimateController {
 	
 	private static final Logger logger = LogManager.getLogger(ClimateController.class);
@@ -42,7 +43,7 @@ public class ClimateController {
 	Map<String,String> errorMap;	
 	
 	
-	@GetMapping(value = "/summary")
+	@GetMapping
     public String getContacts(Model model) {
 		model.addAttribute("summaryList", climateService.getSummaryList());
 		model.addAttribute("title", "Climate Summary");
@@ -74,7 +75,7 @@ public class ClimateController {
 		return "detail";		
 	}	
 	// Non-Implemented GET end points handler
-	@RequestMapping(value={"/","/{non_existing_url}"}, method = RequestMethod.GET)	
+	@RequestMapping(value="/{non_existing_url}", method = RequestMethod.GET)	
 	String invalidPageAccess(Model model, @PathVariable String non_existing_url) {
 		var errorMsg = errorMap.get(ERROR_INVALID_URL);
 		model.addAttribute("error", errorMsg);
