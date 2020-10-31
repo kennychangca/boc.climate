@@ -30,7 +30,7 @@ Run the project directly with:
 > mvn -q spring-boot:run
 
 
-Project UIs
+Project UI Pages
 --------------------
 	- {localhost}/               => Display full list of climate data
 	- {localhost}/detail/{id}    => Display a specified climate data by id
