@@ -1,11 +1,9 @@
 package com.boc.climate.service;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.boc.climate.api.ClimateDataModel;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -14,12 +12,9 @@ import lombok.var;
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,9 +40,7 @@ public class ClimateService {
 	
 	@PostConstruct
 	public void init() throws IOException {
-		
-		// TODO: Adding Error handling if parsing failed and log errors
-		
+				
 		validateStringProvided(inputCsvFilePath, "CSV input file path",0);
 		
 		if (!isValidFilePath(inputCsvFilePath)) {			
@@ -79,8 +72,7 @@ public class ClimateService {
 	}
 	public void validateClimateDataAndSetId() {
 		
-		List<String> skippedDataMessageList = new ArrayList<String>();
-		// TODO: Make a function to validate data fields and log errors        
+		List<String> skippedDataMessageList = new ArrayList<String>();		        
     	int id=1;
     	for (var data: climateDataList) {
     		data.setId(id);
@@ -128,6 +120,7 @@ public class ClimateService {
     }
 	
 	public static boolean isValidFilePath(String path) {
+		
 	    File f = new File(path);
 	    try {
 	       f.getCanonicalPath();

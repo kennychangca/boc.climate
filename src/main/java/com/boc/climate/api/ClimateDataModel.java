@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 public class ClimateDataModel {
 		 	 	 
-	 // @CsvBindByName(required = false)
 	 private int id; 
 	 
 	 @CsvBindByPosition(position = 0)	 	
