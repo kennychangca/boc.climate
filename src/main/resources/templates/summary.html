@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+	<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>		
+	<link rel="stylesheet" type="text/css" th:href="@{/css/datepicker.css}"/>
+	<script type="text/javascript" th:src="@{/js/datepicker.js}"></script>		
+
+<meta charset="ISO-8859-1">
+	<title th:utext="${title}"></title>
+</head>
+
+	<body>
+	  <div class="mx-auto" style="width: 400px;">
+	     <h1 th:utext="${title}" />
+	  </div> 	
+	  <br/><br/>	   
+	  <div class="container">
+	  
+	  <div class="row">
+	    <div id= "errorBox" class="col alert alert-warning alert-dismissible fade show" role="alert">
+	    	<button type="button" class="close" data-dismiss="alert">&times;</button>	        
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="col-3">
+	         
+				<label for="datepicker">Pick a Start Date (dd-mm-yy)
+				<input type="text" id="datepicker_start" autocomplete="off">
+				</label>	
+	  		 
+	    </div>
+	    <div class="col-3">
+	         
+				<label for="datepicker">Pick a End Date (dd-mm-yy)
+					<input type="text" id="datepicker_end" autocomplete="off">
+				</label>	
+	  		 
+	    </div>
+	    <div class="col-5">
+	        <div class = "row">
+	        	<div class="col">
+		  			<button id="filter" type="button" class="btn btn-primary">Filter By Date Range</button>
+		  		</div>		    	    
+		        <div class="col">
+		  			<button id="reset" type="button" class="btn btn-primary">Reset Filter</button>
+		  		</div>
+	        </div>	        
+	    </div>
+	  </div>
+		  
+        <br/><br/>
+        <div class ="row">
+            <table class="table table-sm table-bordered" id="summary" border="1">
+                <thead class="thead-light">
+                <tr>        
+                    <th class="w-25" scope="col">Station Name</th>
+                    <th class="w-10" scope="col">Province</th>
+                    <th class="w-10" scope="col">Date</th>
+                    <th class="w-10" scope="col">Mean Temp</th>
+                    <th class="w-10" scope="col">Highest Monthly Max Mean Temp</th>
+                    <th class="w-10" scope="col">Lowest Monthly Max Mean Temp</th>
+                </tr>
+                </thead>
+                <tr scope="col" th:each ="climateData : ${summaryList}">
+                					
+                    <td th:utext="${climateData.stationName}">...</td>
+                    <td th:utext="${climateData.province}">...</td>                    
+                    <td th:text="${#dates.format(climateData.date, 'dd-MM-yyyy')}"></td>
+                    
+                    
+                    <td><a th:href="@{/detail/{contactId}(contactId=${climateData.id})}" th:utext="${climateData.meanTemp !=null} ? ${climateData.meanTemp}:'null'">...</a></td>
+                    
+                    <td th:utext="${climateData.highestMonthlyMaxTemp != null} ? ${climateData.highestMonthlyMaxTemp} : 'null'">...</td>
+                    <td th:utext="${climateData.lowestMonthlyMinTemp != null} ? ${climateData.lowestMonthlyMinTemp} : 'null'">...</td>
+                </tr>
+            </table>          
+        </div>
+    </div>	  
+    <br/><br/>
+    
+	<script th:inline = "javascript">
+	/*<![CDATA[*/
+		var fullList = /*[[${summaryList}]]*/;
+	/*]]>*/	
+		// Source: http://stackoverflow.com/questions/497790
+		var filteredData = [];
+		
+		var dates = {
+			    convert:function(d) {
+			        // Converts the date in d to a date-object. The input can be:
+			        //   a date object: returned without modification
+			        //  an array      : Interpreted as [year,month,day]. NOTE: month is 0-11.
+			        //   a number     : Interpreted as number of milliseconds
+			        //                  since 1 Jan 1970 (a timestamp) 
+			        //   a string     : Any format supported by the javascript engine, like
+			        //                  "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
+			        //  an object     : Interpreted as an object with year, month and date
+			        //                  attributes.  **NOTE** month is 0-11.
+			        return (
+			            d.constructor === Date ? d :
+			            d.constructor === Array ? new Date(d[0],d[1],d[2]) :
+			            d.constructor === Number ? new Date(d) :
+			            d.constructor === String ? new Date(d) :
+			            typeof d === "object" ? new Date(d.year,d.month,d.date) :
+			            NaN
+			        );
+			    },
+			    compare:function(a,b) {
+			        // Compare two dates (could be of any type supported by the convert
+			        // function above) and returns:
+			        //  -1 : if a < b
+			        //   0 : if a = b
+			        //   1 : if a > b
+			        // NaN : if a or b is an illegal date
+			        // NOTE: The code inside isFinite does an assignment (=).
+			        return (
+			            isFinite(a=this.convert(a).valueOf()) &&
+			            isFinite(b=this.convert(b).valueOf()) ?
+			            (a>b)-(a<b) :
+			            NaN
+			        );
+			    },
+			    inRange:function(d,start,end) {
+			        // Checks if date in d is between dates in start and end.
+			        // Returns a boolean or NaN:
+			        //    true  : if d is between start and end (inclusive)
+			        //    false : if d is before start or after end
+			        //    NaN   : if one or more of the dates is illegal.
+			        // NOTE: The code inside isFinite does an assignment (=).
+			       return (
+			            isFinite(d=this.convert(d).valueOf()) &&
+			            isFinite(start=this.convert(start).valueOf()) &&
+			            isFinite(end=this.convert(end).valueOf()) ?
+			            start <= d && d <= end :
+			            NaN
+			        );
+			    }
+			}
+					
+		
+		$('#filter').on( "click", function() {
+			
+			var startDate =$("#datepicker_start").datepicker('getDate'); 
+			var endDate =$("#datepicker_end").datepicker('getDate');
+						
+			// Use regular expression to check for date formating(dd-mm-yyyy)			
+			if (!validateDate($("#datepicker_start").val())){				
+				showError("Please specfiy a valid start date.");			
+				return;
+			}
+			
+			if (!validateDate($("#datepicker_end").val())){
+				showError("Please specfiy a valid end date.");
+				return;				
+			}
+			
+			// Validate the end date is after start date
+			startDate = dates.convert(startDate)
+			endDate = dates.convert(endDate);
+			
+			if (endDate < startDate) {
+				
+				showError("End date must be after start date.");
+				return;
+			}
+						 
+			if (filteredData.length == 0) {
+				filteredData = filterClimateDataByDateRange(fullList, startDate, endDate);				
+				rebuildTable(filteredData);				
+			} 
+			else {
+				filteredData = filterClimateDataByDateRange(filteredData, startDate, endDate);				
+				rebuildTable(filteredData);				
+			}
+			
+			$('#errorBox').hide();
+			
+		});
+		$('#reset').on( "click", function() {
+			// reload the summary page
+			location.reload(true);
+		});
+				
+		$(document).ready(function() {
+		    // Hide Error Message
+			$('#errorBox').hide();
+		});
+		
+		function showError(errorMsg) {
+			// Show error message
+			$('#errorBox').show();
+			$('#errorBox').text(errorMsg);
+			
+		}
+		
+		function validateDate(date){
+			return date.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);			
+		}
+		function filterClimateDataByDateRange(dataList, startDate, endDate){
+			
+			var returnDataArray = [];			
+			
+			for (var i=0; i<dataList.length; i++)
+			{				
+				var climateDate = dates.convert(dataList[i].date);
+				var dateInRange = dates.inRange(climateDate, startDate, endDate); 
+				if (!isNaN(dateInRange) && dateInRange){
+					returnDataArray.push(dataList[i]);					
+				}	
+			}			
+			return returnDataArray;						
+		}
+		function formatDate(date) {
+		    var d = new Date(date),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) 
+		        month = '0' + month;
+		    if (day.length < 2) 
+		        day = '0' + day;
+
+		    return [day, month, year].join('-');
+		}
+		function rebuildTable(data) {
+			
+			var table = document.getElementById('summary');
+			table.innerHTML=`<thead class="thead-light"><tr>        
+                				<th class="w-25" scope="col">Station Name</th>
+                				<th class="w-10" scope="col">Province</th>
+                				<th class="w-10" scope="col">Date</th>
+                				<th class="w-10" scope="col">Mean Temp</th>
+                				<th class="w-10" scope="col">Highest Monthly Max Mean Temp</th>
+                				<th class="w-10" scope="col">Lowest Monthly Max Mean Temp</th>
+            				</tr></thead>`;
+			for (var i = 0; i <data.length; i++) {
+								
+				
+				var row = `<tr>
+					 		<td>${data[i].stationName}</td> 
+					 		<td>${data[i].province}</td>					 		
+					 		<td>${formatDate(data[i].date)}</td>
+					 		<td><a href="/detail/${data[i].id}">${data[i].meanTemp}</a></td>
+					 		<td>${data[i].highestMonthlyMaxTemp}</td>
+					 		<td>${data[i].lowestMonthlyMinTemp}</td>
+		                   </tr>`;			
+		        table.innerHTML += row;
+			}			
+			
+		}
+		
+	</script>
+	</body>
+</html>
