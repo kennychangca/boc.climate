@@ -25,13 +25,13 @@ public class ClimateDataModel {
 	 private Date date;
 	 
 	 @CsvBindByPosition(position = 3)
-	 private BigDecimal meanTemp;
+	 private String meanTemp;
 	 
 	 @CsvBindByPosition(position = 4)
-	 private BigDecimal highestMonthlyMaxTemp;
+	 private String highestMonthlyMaxTemp;
 	 
 	 @CsvBindByPosition(position = 5)
-	 private BigDecimal lowestMonthlyMinTemp;
+	 private String lowestMonthlyMinTemp;
 	 
 	 public String getStationName() {
 		 return stationName; 

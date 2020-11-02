@@ -44,7 +44,7 @@ public class ClimateController {
 	
 	
 	@GetMapping
-    public String getContacts(Model model) {
+    public String getSummary(Model model) {
 		model.addAttribute("summaryList", climateService.getSummaryList());
 		model.addAttribute("title", "Climate Summary");
 		return "summary";		
