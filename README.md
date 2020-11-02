@@ -44,21 +44,19 @@ Design Decisions
 
 	{Data}
 	
-		- String fields such as Station Name/Province is a mendatory field that shouldn't be empty
+		- String fields such as Station Name, Province is a mendatory field that shouldn't be empty
 		- Date field needs to be a non empty and valid date entry
-		- Temperature fields are mendatory and should have decimal field values or empty
+		- Temperature fields should be decimal or empty
 		- Data source is only supporting .csv as input on application hosted server
 		
 	{Service}
 	
-		- Invalid date or empty station name will be skipped and not loaded into dataset and hence will not be shown on summary page (UI)
-		- Temperture fields are critical, non valid data will cause system to throw exception and service will not start
+		- Invalid date, empty station name, invalid temperature(except null),  will be skipped and not loaded into dataset and hence will not be shown on summary page (UI)		
 		- In "application.properties" file, a error theshold (percentage of invalid dataset) is introduced to determine wheather service should fail out on exception
 		
 UI Limitations
 --------------------
 	- Build with more modern JS liberary, hence some UI features will not be compatible with older version of IEs
 	- Summary data are all listed in one page, not in papable fashion
-	- Data are kept on client side once loaded and content liveness  is not sync periodically with server data
+	- Data are kept on client side once loaded and content liveness is not sync periodically with server data
 	
-
