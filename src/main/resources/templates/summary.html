@@ -72,11 +72,10 @@
                     <td th:utext="${climateData.province}">...</td>                    
                     <td th:text="${#dates.format(climateData.date, 'dd-MM-yyyy')}"></td>
                     
+                    <td><a th:href="@{/detail/{contactId}(contactId=${climateData.id})}" th:utext="${climateData.meanTemp !=null} ? ${climateData.meanTemp}:'na'">...</a></td>
                     
-                    <td><a th:href="@{/detail/{contactId}(contactId=${climateData.id})}" th:utext="${climateData.meanTemp !=null} ? ${climateData.meanTemp}:'null'">...</a></td>
-                    
-                    <td th:utext="${climateData.highestMonthlyMaxTemp != null} ? ${climateData.highestMonthlyMaxTemp} : 'null'">...</td>
-                    <td th:utext="${climateData.lowestMonthlyMinTemp != null} ? ${climateData.lowestMonthlyMinTemp} : 'null'">...</td>
+                    <td th:utext="${climateData.highestMonthlyMaxTemp != null} ? ${climateData.highestMonthlyMaxTemp} : 'na'">...</td>
+                    <td th:utext="${climateData.lowestMonthlyMinTemp != null} ? ${climateData.lowestMonthlyMinTemp} : 'na'">...</td>
                 </tr>
             </table>          
         </div>

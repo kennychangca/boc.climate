@@ -32,25 +32,27 @@ Run the project directly with:
 
 Project UI Pages
 --------------------
-	- {localhost}/               => Display full list of climate data
-	- {localhost}/detail/{id}    => Display a specified climate data by id
+	- {localhost}:8080/               => Display full list of climate data
+	- {localhost}:8080/detail/{id}    => Display a specified climate data by id
 
 
 Design Decisions
 --------------------
 	{UI}
 	
-		- Empty data are displayed with null to allow more clear clickable and consistency
+		- Empty data are displayed with na to allow more clear clickable and consistency
 
 	{Data}
 	
 		- String fields such as Station Name/Province is a mendatory field that shouldn't be empty
 		- Date field needs to be a non empty and valid date entry
+		- Temperature fields are mendatory and should have decimal field values or empty
 		- Data source is only supporting .csv as input on application hosted server
 		
 	{Service}
 	
 		- Invalid date or empty station name will be skipped and not loaded into dataset and hence will not be shown on summary page (UI)
+		- Temperture fields are critical, non valid data will cause system to throw exception and service will not start
 		- In "application.properties" file, a error theshold (percentage of invalid dataset) is introduced to determine wheather service should fail out on exception
 		
 UI Limitations

@@ -39,7 +39,7 @@ public class ClimateService {
 	private int numErrorRecord;
 	
 	@PostConstruct
-	public void init() throws IOException {
+	public void init() {
 				
 		validateStringProvided(inputCsvFilePath, "CSV input file path",0);
 		
@@ -47,25 +47,33 @@ public class ClimateService {
 			throw new IllegalArgumentException("Invalid CSV file provided");			
 		}
 				
-		// Parse CSV file to create a list of climatDataModel objects        	
-       	Reader reader = new BufferedReader(new FileReader(inputCsvFilePath));
+		// Parse CSV file to create a list of climatDataModel objects
+		try {
+			
+			Reader reader = new BufferedReader(new FileReader(inputCsvFilePath));
         	
-        CsvToBean<ClimateDataModel> csvReader = new CsvToBeanBuilder(reader)
-             .withType(ClimateDataModel.class)
-             .withSeparator(',')
-             .withSkipLines(1)
-             .withIgnoreLeadingWhiteSpace(true)
-             .withIgnoreEmptyLine(true)
-             .build();
-        	        		
-        List<ClimateDataModel> results = csvReader.parse();
-        if (results == null) {
-        	throw new IllegalArgumentException("Invalid CSV file provided");
-        }
-        	
-        climateDataList = results;
-        // close the reader
-        reader.close();
+	        CsvToBean<ClimateDataModel> csvReader = new CsvToBeanBuilder(reader)
+	             .withType(ClimateDataModel.class)
+	             .withSeparator(',')
+	             .withSkipLines(1)
+	             .withIgnoreLeadingWhiteSpace(true)
+	             .withIgnoreEmptyLine(true)
+	             .build();
+	        	        		
+	        List<ClimateDataModel> results = csvReader.parse();
+	        if (results == null) {
+	        	throw new IllegalArgumentException("Invalid CSV file provided");
+	        }
+	        	
+	        climateDataList = results;
+	        // close the reader
+	        reader.close();
+		}
+		catch(Exception ex) {
+			// Log Error
+			logger.error("Illegal CSV input file. Ex: " + ex.getMessage()); 
+			throw new IllegalArgumentException("Invalid CSV file provided");
+		}
         
         validateClimateDataAndSetId();
         

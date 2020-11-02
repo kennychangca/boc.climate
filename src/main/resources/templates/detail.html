@@ -36,9 +36,9 @@
                     <td th:utext="${stationName}">...</td>
                     <td th:utext="${province}">...</td>                    
                     <td th:text="${#dates.format(date, 'dd-MM-yyyy')}"></td>
-                    <td th:utext="${meanTemp}">...</td>
-                    <td th:utext="${highestMonthlyMaxTemp}">...</td>
-                    <td th:utext="${lowestMonthlyMinTemp}">...</td>
+                    <td th:utext="${meanTemp != null} ? ${meanTemp} : 'na'">...</td>
+                    <td th:utext="${highestMonthlyMaxTemp != null} ? ${highestMonthlyMaxTemp} : 'na'">...</td>
+                    <td th:utext="${lowestMonthlyMinTemp != null} ? ${lowestMonthlyMinTemp} : 'na'">...</td>                    
                 </tr>
             </table>
 		</div>
